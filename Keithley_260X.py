@@ -94,7 +94,7 @@ class Keithley_260X():
                 
     def set_voltage(self, voltage_V, opc = True):
         """
-        Sets a specified voltage to a specified slot
+        Sets a specified voltage to a specified slot. Don't forget to enable the sources before specifying a voltage.
 
         Parameters
         ----------
@@ -105,10 +105,11 @@ class Keithley_260X():
         None.
         """
             
-        self.enable_sources()
         self.instrument.write(f"smu{self.slot}.source.func = smu{self.slot}.OUTPUT_DCVOLTS")
+        if opc:
+            while self.is_busy():
+                time.sleep(1/self.opc_calls_per_second) 
         self.instrument.write(f"smu{self.slot}.source.levelv = {voltage_V}")
-       
         if opc:
             while self.is_busy():
                 time.sleep(1/self.opc_calls_per_second) 
@@ -125,7 +126,6 @@ class Keithley_260X():
         -------
         voltage : float
         """
-        self.disable_sources()
         voltage = float(self.instrument.query(f"smu{self.slot}.measure.v"))
         return voltage
     
