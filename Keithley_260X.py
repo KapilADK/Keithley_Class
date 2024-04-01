@@ -11,7 +11,6 @@ class Keithley_260X():
         
         Parameters
         ----------
-        
         GPIB : int
             identifier assigned to the SMU connected to a GPIB network
         slot : int
@@ -41,9 +40,7 @@ class Keithley_260X():
         
     def establish_connection(self):
         """
-        
         Establish connection between the PC and the SMU .
-        
         """
         self.rm = visa.ResourceManager() # get a list of connected devices
         return self.rm.open_resource(f"GPIB::{self.GPIB}::INSTR")
@@ -51,21 +48,17 @@ class Keithley_260X():
     
     def identify(self):
         """
-        
         Get the identification string of the SMU
         
         Return
         ------
         str
-        
         """
         return self.instrument.query('*IDN?').strip()
     
     def is_busy(self):
         """
-        
         Checks if there are any pending operations
-
         """
         status = int(self.instrument.query("*OPC?"))
         if status == 0:
@@ -80,7 +73,6 @@ class Keithley_260X():
         Returns
         -------
         None.
-
         """
         self.instrument.write(f"smu{self.slot}.source.output = smu{self.slot}.OUTPUT_ON")
         if opc:
@@ -94,7 +86,6 @@ class Keithley_260X():
         Returns
         -------
         None.
-
         """
         self.instrument.write(f"smu{self.slot}.source.output = smu{self.slot}.OUTPUT_OFF")
         if opc:
@@ -112,7 +103,6 @@ class Keithley_260X():
         Returns
         -------
         None.
-
         """
             
         self.enable_sources()
@@ -134,7 +124,6 @@ class Keithley_260X():
         Returns
         -------
         voltage : float
-
         """
         self.disable_sources()
         voltage = float(self.instrument.query(f"smu{self.slot}.measure.v"))
